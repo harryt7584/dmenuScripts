@@ -1,0 +1,22 @@
+#!/bin/bash
+
+TERM="st -t "st" -e sh -c "
+CMD="cd "
+SUCKLESS="/home/harrison/suckless"
+
+declare -a options=(
+"dmenu"
+"dwm"
+"slstatus"
+"st"
+)
+
+choice=$(printf '%s\n' "${options[@]}" | dmenu -i -p "Directory: ")
+
+if [[ $choice ]]; then 
+	$TERM"$CMD"$SUCKLESS/$choice/"; exec bash"
+	exit 0
+else 
+	exit 1
+fi
+

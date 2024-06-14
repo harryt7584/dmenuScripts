@@ -1,0 +1,39 @@
+#!/bin/bash
+
+BROWSER="firefox --new-window"
+
+declare -a urls=(
+"Amazon Music-https://music.amazon.com"
+"Aniwave-https://aniwave.to"
+"DoubleDouble-https://doubledouble.top"
+"FMovies-https://fmovies24.to"
+"Netflix-https://www.netflix.com/browse"
+"Reddit-https://www.reddit.com"
+"Spotify-https://open.spotify.com"
+"suckless-https://suckless.org"
+"Youtube-https://www.youtube.com"
+"Twitter-https://x.com"
+)
+
+indexOf () {
+	local -n arr=$1
+	for i in "${!arr[@]}"; do
+		if [[ ${arr[i]} == *$2* ]]; then
+			printf '%d' "$i";
+		fi
+	done
+	return 1
+}
+
+choice=$(printf '%s\n' "${urls[@]}" | awk -F '-' '{print $1}' | dmenu -i -p "Website:")
+if [ "$choice" == "" ]; then
+	exit 1
+fi
+urlOfChoice=$(printf '%s\n' "${urls[$(indexOf urls ${choice})]}" | awk -F '-' '{print $NF}')
+
+if [ "$choice" ]; then
+	$BROWSER "${urlOfChoice}"
+else
+	exit 1
+fi
+exit 0

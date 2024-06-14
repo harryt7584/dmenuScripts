@@ -1,0 +1,16 @@
+#!/bin/bash
+
+CMD="feh --bg-center /home/harrison/Pictures/"
+bg="$(ls ~/Pictures/)"
+
+declare -a options=(
+$bg
+)
+
+choice=$(printf '%s\n' "${options[@]}" | dmenu -i -p "Wallpaper:")
+if [ "$choice" ]; then
+	$CMD"$choice"
+else
+	exit 1
+fi
+exit 0

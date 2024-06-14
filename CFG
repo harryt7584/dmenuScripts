@@ -1,0 +1,57 @@
+#!/bin/bash
+TERM="st -t "st" -e sh -c "
+CMD="vim "
+SUCKLESS="/home/harrison/suckless"
+CONFIG="/home/harrison/.config"
+
+declare -a options=(
+"dmenu"
+"dunst"
+"dwm"
+"lf"
+"mpd"
+"neofetch"
+"ncmpcpp"
+"slstatus"
+"st"
+"sxhkd"
+"xinitrc"
+)
+
+choice=$(printf '%s\n' "${options[@]}" | dmenu -i -p "Configure:")
+
+if [[ $choice == "" ]]; then
+	exit 1
+fi
+
+if [[ -e $SUCKLESS/$choice ]]; then
+	file=$(printf '%s\n' "$(ls $SUCKLESS/$choice/)" | dmenu -i -p "File:")
+	if [[ -d $SUCKLESS/$choice/${file} ]]; then
+		echo hi
+		file2=$(printf '%s\n' "$(ls $SUCKLESS/$choice/${file}/*.c | awk -F '/' '{print $NF}')" | dmenu -i -p "File:")
+		$TERM"$CMD"$SUCKLESS/$choice/${file}/${file2}"; exec bash"
+		exit 0
+	else
+		$TERM"$CMD"$SUCKLESS/${choice}/${file}"; exec bash"
+		exit 0
+	fi
+elif [[ -e /home/harrison/.$choice ]]; then
+	if [[ -d /home/harrison/.$choice/${file} ]]; then
+		file=$(printf '%s\n' "$(ls /home/harrison/.$choice/)" | dmenu -i -p "File:")
+		$TERM"$CMD"/home/harrison/.$choice/${file}"; exec bash"
+		exit 0
+	else
+		$TERM"$CMD"/home/harrison/.${choice}"; exec bash"
+	fi
+		exit 0
+elif [[ -e $CONFIG/$choice ]]; then
+	file=$(printf '%s\n' "$(ls $CONFIG/$choice/)" | dmenu -i -p "File:")
+	echo ${file}
+	$TERM"$CMD"$CONFIG/$choice/${file}""
+	exit 0
+else
+	exit 1
+fi
+
+		
+
